@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pluviómetro Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Gráficas de Precipitación</h1>
+    <canvas id="volumeChart"></canvas>
+    <canvas id="frequencyChart"></canvas>
+    <canvas id="intensityChart"></canvas>
+    <canvas id="durationChart"></canvas>
+    <canvas id="temperaturaChart"></canvas>
+    <canvas id="humedadChart"></canvas>
+
+    <script>
+            async function loadData() {
+            const response = await fetch('data/pluviometro.csv');
+            const data = await response.text();
+
+            const rows = data.split('\n').slice(1);
+            const timestamps = [];
+            const volume = [];
+            const frequency = [];
+            const intensity = [];
+            const duration = [];
+            const temperatura = [];
+            const humedad = [];
+
+            rows.forEach(row => {
+                const cols = row.split(',');
+                timestamps.push(cols[0]);
+                volume.push(parseFloat(cols[1]));
+                frequency.push(parseInt(cols[2]));
+                intensity.push(parseFloat(cols[3]));
+                duration.push(parseInt(cols[4]));
+                temperatura.push(parseFloat(cols[5]));
+                humedad.push(parseInt(cols[3]));
+            });
+
+            return { timestamps, volume, frequency, intensity, duration };
+        }
+
+                async function createCharts() {
+            const data = await loadData();
+
+            new Chart(document.getElementById('volumeChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'Volumen (mm)',
+                        data: data.volume,
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                }
+            });
+
+          new Chart(document.getElementById('frequencyChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'Frecuencia (número de vaciados)',
+                        data: data.frequency,
+                        borderColor: 'green',
+                        fill: false
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById('intensityChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'Intensidad (mm/h)',
+                        data: data.intensity,
+                        borderColor: 'red',
+                        fill: false
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById('durationChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'Duración (minutos)',
+                        data: data.duration,
+                        borderColor: 'purple',
+                        fill: false
+                    }]
+                }
+            });
+            new Chart(document.getElementById('temperaturaChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'temperatura (°C)',
+                        data: data.temperatura,
+                        borderColor: 'yellow',
+                        fill: false
+                    }]
+                }
+            });
+            new Chart(document.getElementById('humedadChart'), {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [{
+                        label: 'humedad (%)',
+                        data: data.humedad,
+                        borderColor: 'orange',
+                        fill: false
+        }
+
+        createCharts();
+    </script>
+</body>
+</html>
 
